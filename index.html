@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>가상 카톡 심리 테스트</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #ececec;
+    }
+    #chat {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      height: 100vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .message {
+      max-width: 70%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      line-height: 1.4;
+    }
+    .bot {
+      background-color: #f0f0f0;
+      align-self: flex-start;
+    }
+    .user {
+      background-color: #cce5ff;
+      align-self: flex-end;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .option-btn {
+      padding: 10px;
+      background-color: #ffe066;
+      border: none;
+      border-radius: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .option-btn:hover {
+      background-color: #ffd43b;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chat"></div>
+
+<script>
+  const chat = document.getElementById("chat");
+
+  function addMessage(text, sender = "bot") {
+    const msg = document.createElement("div");
+    msg.className = `message ${sender}`;
+    msg.innerText = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function addOptions(options) {
+    const container = document.createElement("div");
+    container.className = "options";
+
+    options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.innerText = option.text;
+      btn.onclick = () => {
+        container.remove();
+        addMessage(option.text, "user");
+        setTimeout(() => {
+          option.next();
+        }, 500);
+      };
+      container.appendChild(btn);
+    });
+
+    chat.appendChild(container);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function startChat() {
+    addMessage("심한 말");
+    setTimeout(() => {
+      addOptions([
+        { text: "ㅋㅋㅋ", next: scene1 },
+      ]);
+    }, 1000);
+  }
+
+  function scene1() {
+    addMessage("나쁜 말");
+    setTimeout(() => {
+      addOptions([
+        { text: "ㅋㅋㅋ", next: end },
+        { text: "...", next: scene2 }
+      ]);
+    }, 1000);
+  }
+
+  function scene2() {
+    addMessage("?");
+    setTimeout(() => {
+      addOptions([
+        { text: "ㅋㅋㅋ", next: end },
+        { text: "(무시한다)", next: end }
+      ]);
+    }, 1000);
+  }
+
+  function end() {
+    addMessage("이런 느낌입니다..!");
+  }
+
+  startChat();
+</script>
+
+</body>
+</html>
